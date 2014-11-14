@@ -16,15 +16,14 @@
     <TextView
         android:id="@+id/drawer_menulabel"
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@id/drawer_menuimg"
+        android:layout_toRightOf="@+id/drawer_menuimg"
         android:layout_height="match_parent"
         android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="10dp"
         android:textStyle="bold"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
         android:textColor="@color/white"
-        style="?android:attr/listViewStyle"/>
+        style="?android:attr/listViewStyle"
+        android:text="uuuuu"
+        android:gravity="center" />
 </RelativeLayout>
