@@ -1,20 +1,24 @@
 package fr.rhoekath.filemanager;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.Arrays;
 import java.util.List;
 
-import fr.rhoekath.filemanager.adapter.DrawerAdapter;
-
+import fr.rhoekath.filemanager.drawer.DrawerAdapter;
+import fr.rhoekath.filemanager.fragment.ImageFragment;
+import fr.rhoekath.filemanager.fragment.TextFragment;
+import fr.rhoekath.filemanager.fragment.VideoFragment;
 
 public class MainActivity extends Activity {
 
@@ -23,7 +27,7 @@ public class MainActivity extends Activity {
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private String titlePage;
+    private CharSequence titlePage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class MainActivity extends Activity {
 
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
         mDrawerListView.setAdapter(new DrawerAdapter(this, mMenuList));
-
+        mDrawerListView.setOnItemClickListener(new DrawerListListener());
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
@@ -51,32 +55,26 @@ public class MainActivity extends Activity {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getActionBar().setTitle(getResources().getString(R.string.drawer_open));
-                invalidateOptionsMenu(); //
+                invalidateOptionsMenu();
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
@@ -86,6 +84,44 @@ public class MainActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    public class DrawerListListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
 
+    private void selectItem(int position) {
+        Fragment fragment;
 
+        switch (position) {
+            case 0:
+                fragment = new ImageFragment();
+                break;
+            case 1:
+                fragment = new TextFragment();
+                break;
+            case 2:
+                fragment = new VideoFragment();
+                break;
+            default:
+                fragment = new ImageFragment();
+                break;
+        }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+
+        mDrawerListView.setItemChecked(position, true);
+        setTitle(mMenuList.get(position));
+        mDrawerLayout.closeDrawer(mDrawerListView);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+        this.titlePage = title;
+    }
 }

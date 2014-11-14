@@ -8,4 +8,7 @@
     <string name="drawer_open">Menu</string>
     <string name="drawer_close">Fermer</string>
 
+    <string name="menu1">Images</string>
+    <string name="menu2">Textes</string>
+    <string name="menu3">Vidéos</string>
 </resources>

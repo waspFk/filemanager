@@ -20,7 +20,7 @@ public class ImageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image, container);
+        View view = inflater.inflate(R.layout.fragment_image, container, false);
 
         return view;
     }
