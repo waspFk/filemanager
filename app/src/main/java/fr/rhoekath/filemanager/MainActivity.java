@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle("Titre");
+                getActionBar().setTitle("int");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
