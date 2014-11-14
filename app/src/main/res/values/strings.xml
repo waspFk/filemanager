@@ -11,4 +11,5 @@
     <string name="menu1">Images</string>
     <string name="menu2">Textes</string>
     <string name="menu3">Vidéos</string>
+    <string name="menu4">Audio</string>
 </resources>

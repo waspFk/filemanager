@@ -4,5 +4,6 @@
         <item>@string/menu1</item>
         <item>@string/menu2</item>
         <item>@string/menu3</item>
+        <item>@string/menu4</item>
     </string-array>
 </resources>

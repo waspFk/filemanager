@@ -3,6 +3,7 @@ package fr.rhoekath.filemanager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import fr.rhoekath.filemanager.drawer.DrawerAdapter;
 import fr.rhoekath.filemanager.drawer.DrawerItem;
+import fr.rhoekath.filemanager.fragment.AudioFragment;
 import fr.rhoekath.filemanager.fragment.ImageFragment;
 import fr.rhoekath.filemanager.fragment.TextFragment;
 import fr.rhoekath.filemanager.fragment.VideoFragment;
@@ -45,6 +47,7 @@ public class MainActivity extends Activity {
         lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.image_icon), getResources().getString(R.string.menu1)));
         lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.text_icon), getResources().getString(R.string.menu2)));
         lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.movie_icon), getResources().getString(R.string.menu3)));
+        lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.audio_icon), getResources().getString(R.string.menu4)));
 
         titlePage = getResources().getString(R.string.app_name);
 
@@ -60,7 +63,7 @@ public class MainActivity extends Activity {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                setTitle(titlePage);
+                getActionBar().setTitle(titlePage);
                 getActionBar().setIcon(iconPage);
                 invalidateOptionsMenu();
             }
@@ -107,7 +110,7 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
-        Fragment fragment;
+        Fragment fragment = null;
 
         switch (position) {
             case 0:
@@ -122,26 +125,28 @@ public class MainActivity extends Activity {
                 fragment = new VideoFragment();
                 iconPage = getResources().getDrawable(R.drawable.movie_icon);
                 break;
+            case 3:
+                fragment = new AudioFragment();
+                iconPage = getResources().getDrawable(R.drawable.audio_icon);
+                break;
             default:
-                fragment = new ImageFragment();
-                iconPage = getResources().getDrawable(R.drawable.image_icon);
                 break;
         }
+        if (fragment != null) {
+            setIcon(iconPage);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left);
+            ft.replace(R.id.content_frame, fragment).commit();
 
-        setIcon(iconPage);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-
-        mDrawerListView.setItemChecked(position, true);
-        getActionBar().setTitle(lDrawerItems.get(position).getTextView());
-        mDrawerLayout.closeDrawer(mDrawerListView);
+            mDrawerListView.setItemChecked(position, true);
+            mDrawerListView.setSelection(position);
+            titlePage = lDrawerItems.get(position).getTextView();
+            getActionBar().setTitle(titlePage);
+            mDrawerLayout.closeDrawer(mDrawerListView);
+        }
     }
 
-    private void setIcon(Drawable drawable)
-    {
+    private void setIcon(Drawable drawable) {
         getActionBar().setIcon(drawable);
     }
 }
