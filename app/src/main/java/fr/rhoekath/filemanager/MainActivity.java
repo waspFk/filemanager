@@ -12,17 +12,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import fr.rhoekath.filemanager.drawer.DrawerAdapter;
+import fr.rhoekath.filemanager.drawer.DrawerItem;
 import fr.rhoekath.filemanager.fragment.ImageFragment;
 import fr.rhoekath.filemanager.fragment.TextFragment;
 import fr.rhoekath.filemanager.fragment.VideoFragment;
 
 public class MainActivity extends Activity {
 
-    private List<String> mMenuList;
+    private List<DrawerItem> lDrawerItems;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -34,14 +36,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        lDrawerItems = new ArrayList<DrawerItem>();
+        lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.image_icon), getResources().getString(R.string.menu1)));
+        lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.text_icon), getResources().getString(R.string.menu2)));
+        lDrawerItems.add(new DrawerItem(getResources().getDrawable(R.drawable.movie_icon), getResources().getString(R.string.menu3)));
+
         titlePage = getResources().getString(R.string.app_name);
         getActionBar().setTitle(titlePage);
 
-        mMenuList = Arrays.asList(getResources().getStringArray(R.array.testArray));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
-        mDrawerListView.setAdapter(new DrawerAdapter(this, mMenuList));
+        mDrawerListView.setAdapter(new DrawerAdapter(this, lDrawerItems));
         mDrawerListView.setOnItemClickListener(new DrawerListListener());
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
@@ -49,11 +55,13 @@ public class MainActivity extends Activity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 getActionBar().setTitle(titlePage);
+
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                getActionBar().setIcon(getResources().getDrawable(R.drawable.home_icon));
                 getActionBar().setTitle(getResources().getString(R.string.drawer_open));
                 invalidateOptionsMenu();
             }
@@ -97,15 +105,19 @@ public class MainActivity extends Activity {
         switch (position) {
             case 0:
                 fragment = new ImageFragment();
+                getActionBar().setIcon(R.drawable.image_icon);
                 break;
             case 1:
                 fragment = new TextFragment();
+                getActionBar().setIcon(R.drawable.text_icon);
                 break;
             case 2:
                 fragment = new VideoFragment();
+                getActionBar().setIcon(R.drawable.movie_icon);
                 break;
             default:
                 fragment = new ImageFragment();
+                getActionBar().setIcon(R.drawable.image_icon);
                 break;
         }
 
@@ -115,13 +127,14 @@ public class MainActivity extends Activity {
                 .commit();
 
         mDrawerListView.setItemChecked(position, true);
-        setTitle(mMenuList.get(position));
+        setTitle(lDrawerItems.get(position).getTextView());
         mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
     @Override
     public void setTitle(CharSequence title) {
         super.setTitle(title);
+
         this.titlePage = title;
     }
 }
